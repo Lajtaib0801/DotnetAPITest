@@ -25,5 +25,19 @@ namespace DotnetAPITest.Controllers
 
             return Ok(commentDto);
         }
+
+        [HttpGet("{id}")]
+        public async Task<ActionResult<CommentDto>> GetById([FromRoute] int id)
+        {
+            var comment = await _commentRepo.GetByIdAsync(id);
+
+            if (comment is null)
+            {
+                return NotFound();
+            }
+
+            return Ok(comment.ToCommentDto());
+        }
+
     }
 }
