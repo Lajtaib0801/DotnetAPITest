@@ -3,6 +3,7 @@ using DotnetAPITest.Dtos.Stock;
 using DotnetAPITest.Mappers;
 using DotnetAPITest.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace DotnetAPITest.Controllers
 {
@@ -17,16 +18,17 @@ namespace DotnetAPITest.Controllers
         }
 
         [HttpGet]
-        public ActionResult<IEnumerable<StockDto>> GetAll()
+        public async Task<ActionResult<IEnumerable<StockDto>>> GetAll()
         {
-            var stocks = _context.Stocks.ToList().Select(x => x.ToStockDto());
-            return Ok(stocks);
+            var stocks = await _context.Stocks.ToListAsync();
+            var stocksDto = stocks.Select(x => x.ToStockDto());
+            return Ok(stocksDto);
         }
 
         [HttpGet("{id}")]
-        public ActionResult<StockDto> GetById([FromRoute] int id)
+        public async Task<ActionResult<StockDto>> GetById([FromRoute] int id)
         {
-            var stock = _context.Stocks.Find(id);
+            var stock = await _context.Stocks.FindAsync(id);
 
             if (stock is null)
             {
@@ -36,18 +38,18 @@ namespace DotnetAPITest.Controllers
         }
 
         [HttpPost]
-        public ActionResult<StockDto> Create([FromBody] CreateStockRequestDto stockDto)
+        public async Task<ActionResult<StockDto>> Create([FromBody] CreateStockRequestDto stockDto)
         {
             var stockModel = stockDto.ToStockFromCreateDto();
-            _context.Stocks.Add(stockModel);
-            _context.SaveChanges();
+            await _context.Stocks.AddAsync(stockModel);
+            await _context.SaveChangesAsync();
             return CreatedAtAction(nameof(GetById), new { id = stockModel.Id }, stockModel.ToStockDto());
         }
 
         [HttpPut("{id}")]
-        public ActionResult<StockDto> Update([FromRoute] int id, [FromBody] UpdateStockRequestDto updateDto)
+        public async Task<ActionResult<StockDto>> Update([FromRoute] int id, [FromBody] UpdateStockRequestDto updateDto)
         {
-            var stockModel = _context.Stocks.FirstOrDefault(x => x.Id == id);
+            var stockModel = await _context.Stocks.FirstOrDefaultAsync(x => x.Id == id);
 
             if (stockModel is null)
             {
@@ -67,9 +69,9 @@ namespace DotnetAPITest.Controllers
         }
 
         [HttpDelete("{id}")]
-        public IActionResult Delete([FromRoute] int id)
+        public async Task<IActionResult> Delete([FromRoute] int id)
         {
-            var stockModel = _context.Stocks.FirstOrDefault(x => x.Id == id);
+            var stockModel = await _context.Stocks.FirstOrDefaultAsync(x => x.Id == id);
 
             if (stockModel is null)
             {
@@ -77,7 +79,7 @@ namespace DotnetAPITest.Controllers
             }
 
             _context.Stocks.Remove(stockModel);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
 
             return NoContent();
         }
