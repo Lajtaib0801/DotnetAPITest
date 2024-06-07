@@ -1,4 +1,6 @@
 using DotnetAPITest.Data;
+using DotnetAPITest.Interfaces;
+using DotnetAPITest.Repository;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -15,6 +17,8 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     string? constr = builder.Configuration.GetConnectionString("DefaultConnection");
     options.UseMySql(constr, ServerVersion.AutoDetect(constr));
 });
+
+builder.Services.AddScoped<IStockRepository, StockRepository>();
 
 var app = builder.Build();
 
