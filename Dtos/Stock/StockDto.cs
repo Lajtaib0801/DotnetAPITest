@@ -1,4 +1,5 @@
-﻿using DotnetAPITest.Models;
+﻿using DotnetAPITest.Dtos.Comment;
+using DotnetAPITest.Models;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DotnetAPITest.Dtos.Stock
@@ -12,5 +13,6 @@ namespace DotnetAPITest.Dtos.Stock
         public decimal LastDiv { get; set; }
         public string Industry { get; set; } = string.Empty;
         public long MarketCap { get; set; }
+        public List<CommentDto> Comments { get; set; }
     }
 }
