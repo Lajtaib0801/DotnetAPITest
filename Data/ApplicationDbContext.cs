@@ -5,8 +5,8 @@ namespace DotnetAPITest.Data
 {
     public class ApplicationDbContext : DbContext
     {
-        public DbSet<Stock> Stock { get; set; }
-        public DbSet<Comment> Comment { get; set; }
+        public DbSet<Stock> Stocks { get; set; }
+        public DbSet<Comment> Comments { get; set; }
         public ApplicationDbContext(DbContextOptions dbContextOptions) : base(dbContextOptions) { }
     }
 }

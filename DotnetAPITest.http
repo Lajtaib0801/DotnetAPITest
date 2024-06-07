@@ -1,6 +1,10 @@
-@DotnetAPITest_HostAddress = http://localhost:5148
+@DotnetAPITest_HostAddress = https://localhost:7236
 
 GET {{DotnetAPITest_HostAddress}}/weatherforecast/
 Accept: application/json
+
+###
+
+GET {{DotnetAPITest_HostAddress}}/api/stock
 
 ###
