@@ -36,5 +36,22 @@ namespace DotnetAPITest.Repository
 
             return comment;
         }
+
+        public async Task<Comment?> UpdateAsync(int id, Comment commentModel)
+        {
+            var comment = await _context.Comments.FindAsync(id);
+            
+            if (comment is null)
+            {
+                return null;
+            }
+
+            comment.Title = commentModel.Title;
+            comment.Content = commentModel.Content;
+
+            await _context.SaveChangesAsync();
+
+            return comment;
+        }
     }
 }
