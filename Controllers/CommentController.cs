@@ -42,7 +42,7 @@ namespace DotnetAPITest.Controllers
         }
 
         [HttpPost("{stockId}")]
-        public async Task<IActionResult> Create([FromRoute] int stockId, CreateCommentDto commentDto)
+        public async Task<ActionResult<CommentDto>> Create([FromRoute] int stockId, CreateCommentDto commentDto)
         {
             if (!await _stockRepo.StockExists(stockId))
             {
@@ -55,7 +55,7 @@ namespace DotnetAPITest.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateCommentRequestDto updateDto)
+        public async Task<ActionResult<CommentDto>> Update([FromRoute] int id, [FromBody] UpdateCommentRequestDto updateDto)
         {
             var comment = await _commentRepo.UpdateAsync(id, updateDto.ToCommentFromUpdate());
 
@@ -65,6 +65,19 @@ namespace DotnetAPITest.Controllers
             }
 
             return Ok(comment.ToCommentDto());
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<ActionResult<Comment>> Delete([FromRoute] int id)
+        {
+            var comment = await _commentRepo.DeleteAsync(id);
+
+            if (comment is null)
+            {
+                return NotFound("Comment does not exist");
+            }
+
+            return Ok(comment);
         }
     }
 }
