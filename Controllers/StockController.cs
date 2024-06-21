@@ -1,5 +1,6 @@
 ﻿using DotnetAPITest.Data;
 using DotnetAPITest.Dtos.Stock;
+using DotnetAPITest.Helpers;
 using DotnetAPITest.Interfaces;
 using DotnetAPITest.Mappers;
 using Microsoft.AspNetCore.Mvc;
@@ -19,14 +20,14 @@ namespace DotnetAPITest.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<StockDto>>> GetAll()
+        public async Task<ActionResult<IEnumerable<StockDto>>> GetAll([FromQuery] QueryObject query)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var stocks = await _stockRepo.GetAllAsync();
+            var stocks = await _stockRepo.GetAllAsync(query);
             var stocksDto = stocks.Select(x => x.ToStockDto());
             return Ok(stocksDto);
         }
